@@ -54,7 +54,7 @@ keystone.createList("KeystoneUser", {
   }
 });
 
-keystone.set('signin logo', './visma-eAccounting-dark.svg');
+//keystone.set('signin logo', './visma-eAccounting-dark.svg');
 
 const authStrategy = keystone.createAuthStrategy({
   type: PasswordAuthStrategy,
@@ -72,9 +72,9 @@ module.exports = {
     enableDefaultRoute: true,
     authStrategy,
     isAccessAllowed: isAdmin,
-    // hooks: {
-    //   logo: logoHook
-    // }
+    hooks: {
+      logo: require.resolve('./logo.js')
+    }
   })],
   configureExpress: app => {
     app.set('trust proxy', 1);

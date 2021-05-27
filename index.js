@@ -21,9 +21,10 @@ const isLoggedIn = ({ authentication: { item: user } }) => {
 };
 
 const keystone = new Keystone({
+  name: "Learning Portal",
   adapter: new Adapter(adapterConfig),
   cookieSecret: process.env.COOKIE_SECRET || "very-secret2",
-  secureCookies: true,
+  secureCookies: false,
   sessionStore: MongoStore.create({
     mongoUrl: adapterConfig.mongoUri,
     ttl: 24 * 60 * 60 * 1000,
@@ -69,5 +70,8 @@ module.exports = {
     enableDefaultRoute: true,
     authStrategy,
     isAccessAllowed: isAdmin,
-  })]
+  })],
+  configureExpress: app => {
+    app.set('trust proxy', 1);
+  }
 }

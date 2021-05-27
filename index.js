@@ -23,8 +23,13 @@ const isLoggedIn = ({ authentication: { item: user } }) => {
 const keystone = new Keystone({
   adapter: new Adapter(adapterConfig),
   cookieSecret: process.env.COOKIE_SECRET || "very-secret2",
-  secureCookies: false,
-  sessionStore: MongoStore.create({ mongoUrl: adapterConfig.mongoUri }),
+  secureCookies: true,
+  sessionStore: MongoStore.create({
+    mongoUrl: adapterConfig.mongoUri,
+    ttl: 24 * 60 * 60 * 1000,
+    autoRemove: 'interval',
+    autoRemoveInterval: 10 // Value in minutes (default is 10)
+  }),
 
 });
 

@@ -7,6 +7,8 @@ const { MongooseAdapter: Adapter } = require("@keystonejs/adapter-mongoose");
 const PROJECT_NAME = "learningPortalcms";
 const adapterConfig = { mongoUri: process.env.MONGO_URI || "mongodb://mongodb-learning-portal:JmwsMVa9X3LFeROdx0Yv1POUtg41KNwdOGp0fdrYBxAdcXHUdcVilXtGuBVkRGpPKeQoqPs9fmbmLZMYVhU5SQ==@mongodb-learning-portal.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@mongodb-learning-portal@" };
 
+const MongoStore = require('connect-mongo');
+
 const PostSchema = require("./lists/Post.js");
 const UserSchema = require("./lists/KeystoneUser.js");
 
@@ -20,8 +22,10 @@ const isLoggedIn = ({ authentication: { item: user } }) => {
 
 const keystone = new Keystone({
   adapter: new Adapter(adapterConfig),
-  cookieSecret: process.env.COOKIE_SECRET || "very-secret",
+  cookieSecret: process.env.COOKIE_SECRET || "very-secret2",
   secureCookies: false,
+  sessionStore: MongoStore.create({ mongoUrl: adapterConfig.mongoUri }),
+
 });
 
 keystone.createList("Post", {

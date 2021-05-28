@@ -5,12 +5,20 @@ const { AdminUIApp } = require("@keystonejs/app-admin-ui");
 const { PasswordAuthStrategy } = require("@keystonejs/auth-password");
 const { MongooseAdapter: Adapter } = require("@keystonejs/adapter-mongoose");
 const PROJECT_NAME = "Learning Portal CMS";
-const adapterConfig = { mongoUri: process.env.MONGO_URI || "mongodb://mongodb-learning-portal:JmwsMVa9X3LFeROdx0Yv1POUtg41KNwdOGp0fdrYBxAdcXHUdcVilXtGuBVkRGpPKeQoqPs9fmbmLZMYVhU5SQ==@mongodb-learning-portal.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@mongodb-learning-portal@" };
+const adapterConfig = {
+  dbName: "learningPortal",
+  mongoUri: process.env.MONGO_URI || "mongodb://mongodb-learning-portal:JmwsMVa9X3LFeROdx0Yv1POUtg41KNwdOGp0fdrYBxAdcXHUdcVilXtGuBVkRGpPKeQoqPs9fmbmLZMYVhU5SQ==@mongodb-learning-portal.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@mongodb-learning-portal@"
+};
 
 const MongoStore = require('connect-mongo');
 
-const PostSchema = require("./lists/Post.js");
-const UserSchema = require("./lists/KeystoneUser.js");
+//const PostSchema = require("./lists/Post.js");
+const KeystoneUserSchema = require("./lists/KeystoneUser.js");
+const DisciplineSchema = require("./lists/Discipline.js");
+const CategorySchema = require("./lists/Category.js");
+const RoleSchema = require("./lists/Role.js");
+const StorySchema = require("./lists/Story.js");
+const UserSchema = require("./lists/User.js");
 
 const isAdmin = ({ authentication: { item: user } }) => {
   return !!user && !!user.isAdmin;
@@ -29,29 +37,74 @@ const keystone = new Keystone({
     mongoUrl: adapterConfig.mongoUri,
     ttl: 24 * 60 * 60 * 1000,
     autoRemove: 'interval',
-    autoRemoveInterval: 10 // Value in minutes (default is 10)
+    autoRemoveInterval: 10,
+    collectionName: "learningPortal"
   }),
 
-});
-
-keystone.createList("Post", {
-  fields: PostSchema.fields,
-  access: {
-    read: true,
-    create: isLoggedIn,
-    update: isLoggedIn,
-    delete: isLoggedIn
-  }
-});
+})
 
 keystone.createList("KeystoneUser", {
+  fields: KeystoneUserSchema.fields,
+  access: {
+    read: true,
+    create: isAdmin,
+    update: isAdmin,
+    delete: isAdmin
+  },
+});
+
+keystone.createList("User", {
   fields: UserSchema.fields,
+  access: {
+    read: true,
+    create: false,
+    update: false,
+    delete: false
+  },
+});
+
+keystone.createList("Discipline", {
+  fields: DisciplineSchema.fields,
+  access: {
+    read: true,
+    create: isAdmin,
+    update: isAdmin,
+    delete: isAdmin
+  },
+  labelResolver: item => item.title
+});
+
+keystone.createList("Category", {
+  fields: CategorySchema.fields,
+  access: {
+    read: true,
+    create: isAdmin,
+    update: isAdmin,
+    delete: isAdmin
+  },
+  labelResolver: item => item.title
+});
+
+keystone.createList("Role", {
+  fields: RoleSchema.fields,
   access: {
     read: true,
     create: isAdmin,
     update: isAdmin,
     delete: isAdmin
   }
+});
+
+keystone.createList("Story", {
+  fields: StorySchema.fields,
+  access: {
+    read: true,
+    create: isAdmin,
+    update: isAdmin,
+    delete: isAdmin
+  },
+  labelResolver: item => item.title
+
 });
 
 //keystone.set('signin logo', './visma-eAccounting-dark.svg');

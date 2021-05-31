@@ -11,6 +11,5 @@ const categoryFields = {
             isMultiline: true
         },
     },
-    labelResolver: item => item.title,
 }
 module.exports = categoryFields;

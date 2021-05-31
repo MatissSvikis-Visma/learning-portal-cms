@@ -11,6 +11,9 @@ const storyFields = {
             type: Wysiwyg,
             isMultiline: true
         },
+        excerpt: {
+            type: Text
+        },
         status: {
             type: Select,
             options: [
@@ -24,6 +27,6 @@ const storyFields = {
             many: false,
             isRequired: true
         }
-    }
+    },
 }
 module.exports = storyFields;

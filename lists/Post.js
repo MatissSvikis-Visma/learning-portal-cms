@@ -23,6 +23,6 @@ const postFields = {
             many: false,
             isRequired: true
         }
-    }
+    },
 }
 module.exports = postFields;

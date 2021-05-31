@@ -1,7 +1,7 @@
 const { Text, Select, Relationship, Slug } = require('@keystonejs/fields');
 const slugify = require('slugify');
 
-const disciplineFields = {
+const guildFields = {
     fields: {
         title: {
             type: Text,
@@ -17,30 +17,11 @@ const disciplineFields = {
             type: Text,
             isMultiline: true
         },
-        category: {
+        links: {
             type: Relationship,
-            ref: "Category",
-            isRequired: true,
-            many: false
-        },
-        contacts: {
-            type: Relationship,
-            ref: "User",
+            ref: "Link",
             many: true
-        },
-        relatedCareerOptions: {
-            type: Relationship,
-            ref: "Role",
-            many: true
-        },
-        guilds: {
-            type: Relationship,
-            ref: "Guild",
-            many: true
-        },
-        specializations: {
-            type: Text
         }
     },
 }
-module.exports = disciplineFields;
+module.exports = guildFields;

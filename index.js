@@ -7,10 +7,12 @@ const { MongooseAdapter: Adapter } = require("@keystonejs/adapter-mongoose");
 const PROJECT_NAME = "Learning Portal CMS";
 const adapterConfig = {
   dbName: "learningPortal",
-  mongoUri: process.env.MONGO_URI || "mongodb://mongodb-learning-portal:JmwsMVa9X3LFeROdx0Yv1POUtg41KNwdOGp0fdrYBxAdcXHUdcVilXtGuBVkRGpPKeQoqPs9fmbmLZMYVhU5SQ==@mongodb-learning-portal.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@mongodb-learning-portal@"
+  mongoUri:
+    process.env.MONGO_URI ||
+    "mongodb://mongodb-learning-portal:JmwsMVa9X3LFeROdx0Yv1POUtg41KNwdOGp0fdrYBxAdcXHUdcVilXtGuBVkRGpPKeQoqPs9fmbmLZMYVhU5SQ==@mongodb-learning-portal.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@mongodb-learning-portal@",
 };
 
-const MongoStore = require('connect-mongo');
+const MongoStore = require("connect-mongo");
 
 //const PostSchema = require("./lists/Post.js");
 const KeystoneUserSchema = require("./lists/KeystoneUser.js");
@@ -19,6 +21,9 @@ const CategorySchema = require("./lists/Category.js");
 const RoleSchema = require("./lists/Role.js");
 const StorySchema = require("./lists/Story.js");
 const UserSchema = require("./lists/User.js");
+const GuildSchema = require("./lists/Guild.js");
+const LinkSchema = require("./lists/Link.js");
+const TagSchema = require("./lists/Tag.js");
 
 const isAdmin = ({ authentication: { item: user } }) => {
   return !!user && !!user.isAdmin;
@@ -36,12 +41,11 @@ const keystone = new Keystone({
   sessionStore: MongoStore.create({
     mongoUrl: adapterConfig.mongoUri,
     ttl: 24 * 60 * 60 * 1000,
-    autoRemove: 'interval',
+    autoRemove: "interval",
     autoRemoveInterval: 10,
-    collectionName: "learningPortal"
+    collectionName: "learningPortal",
   }),
-
-})
+});
 
 keystone.createList("KeystoneUser", {
   fields: KeystoneUserSchema.fields,
@@ -49,7 +53,7 @@ keystone.createList("KeystoneUser", {
     read: true,
     create: isAdmin,
     update: isAdmin,
-    delete: isAdmin
+    delete: isAdmin,
   },
 });
 
@@ -59,8 +63,41 @@ keystone.createList("User", {
     read: true,
     create: false,
     update: false,
-    delete: false
+    delete: false,
   },
+});
+
+keystone.createList("Guild", {
+  fields: GuildSchema.fields,
+  access: {
+    read: true,
+    create: isAdmin,
+    update: isAdmin,
+    delete: isAdmin,
+  },
+  labelResolver: (item) => item.title,
+});
+
+keystone.createList("Tag", {
+  fields: TagSchema.fields,
+  access: {
+    read: true,
+    create: isAdmin,
+    update: isAdmin,
+    delete: isAdmin,
+  },
+  labelResolver: (item) => item.title,
+});
+
+keystone.createList("Link", {
+  fields: LinkSchema.fields,
+  access: {
+    read: true,
+    create: isAdmin,
+    update: isAdmin,
+    delete: isAdmin,
+  },
+  labelResolver: (item) => item.title,
 });
 
 keystone.createList("Discipline", {
@@ -69,9 +106,9 @@ keystone.createList("Discipline", {
     read: true,
     create: isAdmin,
     update: isAdmin,
-    delete: isAdmin
+    delete: isAdmin,
   },
-  labelResolver: item => item.title
+  labelResolver: (item) => item.title,
 });
 
 keystone.createList("Category", {
@@ -80,9 +117,9 @@ keystone.createList("Category", {
     read: true,
     create: isAdmin,
     update: isAdmin,
-    delete: isAdmin
+    delete: isAdmin,
   },
-  labelResolver: item => item.title
+  labelResolver: (item) => item.title,
 });
 
 keystone.createList("Role", {
@@ -91,8 +128,9 @@ keystone.createList("Role", {
     read: true,
     create: isAdmin,
     update: isAdmin,
-    delete: isAdmin
-  }
+    delete: isAdmin,
+  },
+  labelResolver: (item) => item.title,
 });
 
 keystone.createList("Story", {
@@ -101,10 +139,9 @@ keystone.createList("Story", {
     read: true,
     create: isAdmin,
     update: isAdmin,
-    delete: isAdmin
+    delete: isAdmin,
   },
-  labelResolver: item => item.title
-
+  labelResolver: (item) => item.title,
 });
 
 //keystone.set('signin logo', './visma-eAccounting-dark.svg');
@@ -114,22 +151,25 @@ const authStrategy = keystone.createAuthStrategy({
   list: "KeystoneUser",
   config: {
     identityField: "email",
-    secretField: "password"
-  }
+    secretField: "password",
+  },
 });
 
 module.exports = {
   keystone,
-  apps: [new GraphQLApp(), new AdminUIApp({
-    name: PROJECT_NAME,
-    enableDefaultRoute: true,
-    authStrategy,
-    isAccessAllowed: isAdmin,
-    hooks: {
-      logo: require.resolve('./logo.js')
-    }
-  })],
-  configureExpress: app => {
-    app.set('trust proxy', 1);
-  }
-}
+  apps: [
+    new GraphQLApp(),
+    new AdminUIApp({
+      name: PROJECT_NAME,
+      enableDefaultRoute: true,
+      authStrategy,
+      isAccessAllowed: isAdmin,
+      hooks: {
+        logo: require.resolve("./logo.js"),
+      },
+    }),
+  ],
+  configureExpress: (app) => {
+    app.set("trust proxy", 1);
+  },
+};

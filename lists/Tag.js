@@ -2,7 +2,7 @@ const { Text, Select, Relationship } = require('@keystonejs/fields');
 const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce');
 
 
-const roleFields = {
+const tagFields = {
     fields: {
         title: {
             type: Text,
@@ -12,16 +12,6 @@ const roleFields = {
             type: Wysiwyg,
             isMultiline: true
         },
-        discipline: {
-            type: Relationship,
-            ref: "Discipline",
-            many: false
-        },
-        tags: {
-            type: Relationship,
-            ref: "Tag",
-            many: true
-        },
     },
 }
-module.exports = roleFields;
+module.exports = tagFields;

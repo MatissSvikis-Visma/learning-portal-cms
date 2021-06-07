@@ -15,13 +15,39 @@ const roleFields = {
         discipline: {
             type: Relationship,
             ref: "Discipline",
-            many: false
+            many: true
         },
         tags: {
             type: Relationship,
             ref: "Tag",
             many: true
         },
+        linksTo: {
+            type: Relationship,
+            ref: "Role",
+            many: true,
+        },
+        row: {
+            type: Select,
+            options: [
+                { value: 1, label: 'one' },
+                { value: 2, label: 'two' },
+                { value: 3, label: 'three' },
+                { value: 4, label: 'four' }
+            ],
+            dataType: 'integer'
+        },
+        column: {
+            type: Select,
+            options: [
+                { value: 1, label: 'one' },
+                { value: 2, label: 'two' },
+                { value: 3, label: 'three' },
+                { value: 4, label: 'four' },
+                { value: 5, label: 'five' }
+            ],
+            dataType: 'integer'
+        }
     },
 }
 module.exports = roleFields;

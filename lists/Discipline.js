@@ -12,6 +12,7 @@ const disciplineFields = {
             adminConfig: {
                 isReadOnly: true, //slug can be created automatically and you may want to show this as read only
             },
+            unique: true
         },
         body: {
             type: Text,

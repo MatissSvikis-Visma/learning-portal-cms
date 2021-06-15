@@ -1,4 +1,4 @@
-const { Text, Select, Relationship } = require('@keystonejs/fields');
+const { Text, Select, Relationship, Slug, Checkbox } = require('@keystonejs/fields');
 const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce');
 
 const storyFields = {
@@ -6,6 +6,13 @@ const storyFields = {
         title: {
             type: Text,
             isRequired: true
+        },
+        slug: {
+            type: Slug,
+            adminConfig: {
+                isReadOnly: true, //slug can be created automatically and you may want to show this as read only
+            },
+            unique: true
         },
         body: {
             type: Wysiwyg,
@@ -23,8 +30,11 @@ const storyFields = {
         },
         author: {
             type: Text,
-            ref: "KeystoneUser",
             many: false,
+            isRequired: true
+        },
+        isFeatured: {
+            type: Checkbox,
             isRequired: true
         }
     },

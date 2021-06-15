@@ -41,7 +41,14 @@ const disciplineFields = {
         },
         specializations: {
             type: Text
-        }
+        },
+        status: {
+            type: Select,
+            options: [
+                { value: "PUBLISHED", label: "Published" },
+                { value: "UNPUBLISHED", label: "Unpublished" }
+            ]
+        },
     },
 }
 module.exports = disciplineFields;

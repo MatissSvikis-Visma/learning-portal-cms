@@ -2,6 +2,8 @@ const dotenv = require("dotenv").config();
 const { Keystone } = require("@keystonejs/keystone");
 const { GraphQLApp } = require("@keystonejs/app-graphql");
 const { AdminUIApp } = require("@keystonejs/app-admin-ui");
+const { StaticApp } = require("@keystonejs/app-static");
+
 const { PasswordAuthStrategy } = require("@keystonejs/auth-password");
 const { MongooseAdapter: Adapter } = require("@keystonejs/adapter-mongoose");
 const PROJECT_NAME = "Learning Portal CMS";
@@ -167,6 +169,11 @@ module.exports = {
       hooks: {
         logo: require.resolve("./logo.js"),
       },
+    }),
+    new StaticApp({
+      path: "/",
+      src: "public",
+      fallback: "index.html",
     }),
   ],
   configureExpress: (app) => {
